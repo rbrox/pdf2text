@@ -2,6 +2,7 @@ import streamlit as st
 import fitz
 from io import BytesIO
 from preprocess import preprocess_text
+from apiCalls import fetchData
 
 # Streamlit app layout
 st.title("PDF Processing Pipeline")
@@ -18,13 +19,6 @@ if uploaded_file is not None:
     # Open the PDF using PyMuPDF from the in-memory file
     doc = fitz.open(stream=file_bytes, filetype="pdf")
     
-    # Extract text from the first page (for demo purposes)
-    first_page = doc.load_page(0)
-    first_page_text = first_page.get_text()
-    
-    
-    st.write("Text from the first page:")
-    st.write(first_page_text[:1000])  # Display the first 1000 characters
     
     # read entire PDF
     full_text = ""
@@ -32,9 +26,13 @@ if uploaded_file is not None:
         full_text += page.get_text()
     
     # preprocess the text
-    
+    st.write(full_text[:10000])
     preprocessed_text = preprocess_text(full_text)
     del full_text
     
-    st.write("Preprocessed text:" + preprocessed_text[:1000])
+    # 
+    data = fetchData(preprocessed_text[:10000])
+    del preprocessed_text
+    st.write("Data from GPT-3:")
+    st.json(data)
     

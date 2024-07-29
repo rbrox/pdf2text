@@ -5,3 +5,4 @@ openai
 pymupdf
 streamlit
 nltk
+python-dotenv
